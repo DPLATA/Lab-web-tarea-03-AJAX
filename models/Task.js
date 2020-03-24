@@ -26,3 +26,9 @@ exports.find = (id) => {
   .where({id: id})
   .first()
 }
+
+exports.deleteTask = (id) => {
+  return knex('tasks')
+  .where({id: id})
+  .del()
+}

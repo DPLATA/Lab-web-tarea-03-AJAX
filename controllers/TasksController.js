@@ -19,3 +19,10 @@ exports.updateStatus = (req, res) => {
     res.redirect('/');
   });
 }
+
+exports.deleteTask = (req, res) => {
+  Task.deleteTask(req.body.id).then((id) =>{
+    console.log('Task deleted, ok');
+    res.redirect('/')
+  })
+}
