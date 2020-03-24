@@ -6,4 +6,6 @@ router.get('/', homepageController.index);
 
 router.post('/tasks', tasksController.store);
 
+router.post('/update/:id', tasksController.updateStatus)
+
 module.exports = router;

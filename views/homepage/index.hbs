@@ -6,24 +6,27 @@
   </div>
   <div class="row">
     <div class="col-lg-12">
-      <form class="form-inline" action="/tasks" method="POST">
+      <form class="form-inline" action="" method=""> <!--action=/tasks and method=POST-->
         <div class="input-group w-100">
-          <input type="text" name="description" placeholder="I have to..." class="form-control">
+          <input required type="text" name="description" placeholder="I have to..." class="form-control" id="taskDescription">
           <div class="input-group-append">
-            <input type="submit" value="Add" class="btn btn-primary">
+            <input type="button" value="Add" class="btn btn-primary" onclick="saveTask();">
           </div>
         </div>
       </form>
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-12" id="tasksList">
       {{#each tasks}}
       <div class="card my-3 {{#eq status 'done' }}bg-light{{/eq}}">
         <div class="card-body">
           <p class="card-text">{{ description }}</p>
           {{#eq status 'pending'}}
-            <a href="#" class="card-link">Done</a>
+          <form class="" action="/update/{{id}}" method="POST">
+            <!--<input type="hidden" name="id" value="{{ id }}">-->
+            <a href="javascript:;" class="card-link" onclick="parentNode.submit();">Done</a>
+          </form>
           {{/eq}}
         </div>
       </div>
@@ -31,3 +34,46 @@
     </div>
   </div>
 </main>
+<script>
+  function saveTask(){
+    console.log('add');
+    let description = document.getElementById('taskDescription').value;
+    let body = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({description: description})
+    };
+    fetch('/tasks', body).then(response => {
+      if (response.ok) {
+        return response.json();
+      }else {
+        throw "Error en la llamada AJAX"
+      }
+    }).then(task => {
+      document.getElementById('taskDescription').value = '';
+      addTask(task);
+    }).catch(error => {
+      console.log('Error: ', error);
+    })
+  }
+
+  function addTask(task){
+    let html =
+    `
+    <div class="card my-3" id="card${task.id}">
+      <div class="card-body">
+        <p class="card-text" id="card${task.id}">${task.description}</p>
+        <form>
+          <a href="javascript:;" class="card-link" onclick="parentNode.submit();">Done</a>
+        </form>
+      </div>
+    </div>
+    `;
+
+    let node = document.createRange().createContextualFragment(html);
+    document.getElementById('tasksList').prepend(node);
+  }
+</script>

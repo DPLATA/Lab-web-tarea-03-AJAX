@@ -10,6 +10,10 @@ El proyecto ya viene configurado con algunos paquetes comunes que utilizamos.
 npm install
 ```
 
+'''shell
+knex migrate:latest
+'''
+
 ## Ejecución
 ```
 node server.js
