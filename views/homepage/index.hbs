@@ -19,13 +19,13 @@
   <div class="row">
     <div class="col-lg-12" id="tasksList">
       {{#each tasks}}
-      <div class="card my-3 {{#eq status 'done' }}bg-light{{/eq}}">
+      <div id="card{{id}}" class="card my-3 {{#eq status 'done' }}bg-light{{/eq}}">
         <div class="card-body">
-          <p class="card-text">{{ description }}</p>
+          <p id="task{{id}}" class="card-text">{{ description }}</p>
           {{#eq status 'pending'}}
-          <form class="" action="/update/{{id}}" method="POST">
+          <form>
             <!--<input type="hidden" name="id" value="{{ id }}">-->
-            <a href="javascript:;" class="card-link" onclick="parentNode.submit();">Done</a>
+            <a id="done{{id}}" href="javascript:;" class="card-link" onclick="doneTask({{id}});">Done</a>
           </form>
           {{/eq}}
         </div>
@@ -36,7 +36,6 @@
 </main>
 <script>
   function saveTask(){
-    console.log('add');
     let description = document.getElementById('taskDescription').value;
     let body = {
       method: 'POST',
@@ -65,9 +64,9 @@
     `
     <div class="card my-3" id="card${task.id}">
       <div class="card-body">
-        <p class="card-text" id="card${task.id}">${task.description}</p>
+        <p class="card-text" id="task${task.id}">${task.description}</p>
         <form>
-          <a href="javascript:;" class="card-link" onclick="parentNode.submit();">Done</a>
+          <a id="done${task.id}" href="javascript:;" class="card-link" onclick="doneTask(${task.id});">Done</a>
         </form>
       </div>
     </div>
@@ -76,4 +75,35 @@
     let node = document.createRange().createContextualFragment(html);
     document.getElementById('tasksList').prepend(node);
   }
+
+  function doneTask(id){
+  console.log(id);
+   let body = {
+     method: 'POST',
+     headers: {
+       Accept: 'application/json',
+       'Content-Type': 'application/json'
+     },
+     body: JSON.stringify({id: id})
+   };
+   fetch('/update/'+id, body).then(response => {
+     if(response.ok){
+       console.log('a');
+       //return response.json();
+     }else{
+       throw "Error en la llamada AJAX"
+     }
+   }).then(task => {
+     console.log('donetask');
+     doneMark(id);
+   }).catch(error => {
+     console.log('Error '+error);
+   });
+ }
+ function doneMark(id){
+   console.log('donetask');
+   let doneLink = document.getElementById('done'+id)
+   doneLink.parentNode.parentNode.classList.add('bg-light')
+   doneLink.parentNode.removeChild(doneLink)
+ }
 </script>
