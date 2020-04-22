@@ -26,3 +26,9 @@ exports.deleteTask = (req, res) => {
     res.redirect('/')
   })
 }
+
+exports.retrieveAll = (req, res) => {
+  Task.all().then((data) => {
+    console.log(data);
+  })
+}

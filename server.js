@@ -1,6 +1,7 @@
 // Imports
 const express = require('express');
 const webRoutes = require('./routes/web');
+const cors = require('cors')
 
 // Express app creation
 const app = express();
@@ -24,8 +25,16 @@ app.set('view engine', extNameHbs);
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+//CORS
+var corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions));
+
 // Routes
 app.use('/', webRoutes);
+
 
 // App init
 app.listen(appConfig.expressPort, () => {

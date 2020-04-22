@@ -10,4 +10,6 @@ router.post('/update/:id', tasksController.updateStatus)
 
 router.post('/delete/:id', tasksController.deleteTask)
 
+router.get('/tasks', tasksController.retrieveAll)
+
 module.exports = router;
