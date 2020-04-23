@@ -30,5 +30,6 @@ exports.deleteTask = (req, res) => {
 exports.retrieveAll = (req, res) => {
   Task.all().then((data) => {
     console.log(data);
+    res.send(data)
   })
 }
